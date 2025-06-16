@@ -22,3 +22,9 @@ This document includes a comprehensive overview of the system, detailing:
 
 This monitoring service is intended for teams looking for an efficient, **developer-friendly** alternative to complex DB monitoring platforms — especially when working with **Redis** or similar **high-performance in-memory data stores**.
 
+## System Architecture
+
+The following diagram illustrates the overall architecture of the Redis/In-Memory DB monitoring service:
+
+![System Architecture Diagram](https://github.com/ankushT369/DMONS/blob/main/docs/architecture.png)
+
