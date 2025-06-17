@@ -2,17 +2,14 @@
 
 set -e
 
-CONFIG_ENV_PATH="src/config/config.env"
-REDIS_CONF_PATH="/etc/redis/redis.conf"  # Assumes Redis is configured here
-INSTALL_SCRIPT="src/script/install.sh"
-LAUNCH_SCRIPT="src/script/launch.sh"
+CONFIG_ENV_PATH="config/config.env"
+REDIS_CONF_PATH="/etc/redis/redis.conf"
+INSTALL_SCRIPT="script/install.sh"
+LAUNCH_SCRIPT="script/launch.sh"
 
-# Define cleanup handler for Ctrl+C
 cleanup() {
     echo -e "\nCtrl+C detected. Cleaning up..."
 
-    # Optional: Stop Redis exporter container if running in foreground
-    # We only check for exporter container name if it was launched
     CONTAINER_ID=$(docker ps --filter ancestor=oliver006/redis_exporter --format "{{.ID}}")
     if [ -n "$CONTAINER_ID" ]; then
         echo "Stopping Redis Exporter container $CONTAINER_ID..."
@@ -23,18 +20,7 @@ cleanup() {
     exit 1
 }
 
-# Trap Ctrl+C (SIGINT)
 trap cleanup INT
-
-check_rust_installed() {
-    if ! command -v rustc &> /dev/null || ! command -v cargo &> /dev/null; then
-        echo "Rust not found. Installing Rust..."
-        curl https://sh.rustup.rs -sSf | sh -s -- -y
-        source "$HOME/.cargo/env"
-    else
-        echo "Rust and Cargo are already installed."
-    fi
-}
 
 check_redis_installed() {
     if ! command -v redis-server &> /dev/null; then
@@ -86,7 +72,6 @@ run_project_scripts() {
 }
 
 main() {
-    check_rust_installed
     check_redis_installed
     extract_password_from_redis_conf
     update_config_env_password
